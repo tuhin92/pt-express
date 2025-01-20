@@ -1,4 +1,4 @@
-import express, {Request, Response} from 'express'
+import express, {NextFunction, Request, Response} from 'express'
 const app = express()
 const port = 3000
 
@@ -6,13 +6,22 @@ const port = 3000
 app.use(express.json());
 app.use(express.text());
 
-app.get('/', (req: Request , res: Response) => {
-  res.send('Server is running!')
+
+//middleware
+const log = (req : Request, res: Response, next: NextFunction) => {
+    console.log(req.url, req.method, req.body, req.hostname);
+    next();
+}
+
+app.get('/', log, (req: Request , res: Response) => {
+    res.send('Server is running!')
 })
 
-app.post('/', (req: Request , res: Response) => {
+app.post('/', log, (req: Request , res: Response) => {
     console.log(req.body);
-    res.send("dsahj");
+    res.json({
+        message: 'Data received',
+    })
 })
 
 export default app;

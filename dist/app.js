@@ -9,11 +9,18 @@ const port = 3000;
 //parse json
 app.use(express_1.default.json());
 app.use(express_1.default.text());
-app.get('/', (req, res) => {
+//middleware
+const log = (req, res, next) => {
+    console.log(req.url, req.method, req.body, req.hostname);
+    next();
+};
+app.get('/', log, (req, res) => {
     res.send('Server is running!');
 });
-app.post('/', (req, res) => {
+app.post('/', log, (req, res) => {
     console.log(req.body);
-    res.send("dsahj");
+    res.json({
+        message: 'Data received',
+    });
 });
 exports.default = app;
