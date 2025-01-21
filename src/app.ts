@@ -40,8 +40,17 @@ const log = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-app.get("/", log, (req: Request, res: Response) => {
-  res.send("Server is running!");
+app.get("/", log, async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.send(hhjgjhg);
+  } catch (error) {
+    console.log(error);
+    next(error);
+    // res.status(500).json({
+    //   success: false,
+    //   message: "Internal server error",
+    // })
+  }
 });
 
 app.post("/", log, (req: Request, res: Response) => {
@@ -49,6 +58,25 @@ app.post("/", log, (req: Request, res: Response) => {
   res.json({
     message: "Data received",
   });
+});
+
+
+app.all("*", (req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: "Route is not found",
+  })
+});
+
+
+//global error handler
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+  if(error) {
+    res.status(500).json({
+      success: false,,
+      message: "Internal server error",
+    });
+  }
 });
 
 export default app;
